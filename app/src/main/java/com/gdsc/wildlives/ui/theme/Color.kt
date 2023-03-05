@@ -21,3 +21,14 @@ val bgwhitelight = Color(0xffF7F7F7)
 
 val statusBar = Color(0xFF1BA57B)
 
+val ghost_gray = Color(0xFFDFDFDF)
+
+val iucn_ex_color = Color(0xFF091111)
+val iucn_ew_color = Color(0xFF815E87)
+val iucn_cr_color = Color(0xFFBE261A)
+val iucn_en_color = Color (0xFFE9823D)
+val iucn_vu_color = Color(0xFFF6C337)
+val iucn_nt_color = Color(0xFF92BB33)
+val iucn_lc_color = Color(0xFF50B634)
+val iucn_dd_color = Color(0xFFBDBDBD)
+val iucn_ne_color = Color(0xFFF7F7F7)

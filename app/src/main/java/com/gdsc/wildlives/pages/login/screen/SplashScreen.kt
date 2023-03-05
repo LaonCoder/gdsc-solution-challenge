@@ -1,5 +1,6 @@
 package com.gdsc.wildlives.pages.splash
 
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -17,14 +18,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.gdsc.wildlives.MainActivity
 import com.gdsc.wildlives.R
+import com.gdsc.wildlives.data.animalData
 import com.gdsc.wildlives.navigation.Screen
 import com.gdsc.wildlives.pages.login.LoginViewModel
 import com.gdsc.wildlives.ui.theme.colorPrimary
 import com.gdsc.wildlives.ui.theme.colorSecondary
 import com.gdsc.wildlives.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.delay
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.*
+import kotlin.system.exitProcess
 
 @Composable
 fun SplashScreen(
@@ -50,9 +57,26 @@ fun SplashScreen(
                 }
             )
         )
-        delay(Constants.SPLASH_SCREEN_DURATION)
-        navController.popBackStack()
-        navController.navigate(Screen.LoginScreen.route)
+
+        val db = Firebase.firestore
+
+        db.collection("ANIMAL")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    animalData.add(document.toObject())
+
+                }
+                Log.d("Fetch Animal Data From Firebase", "Successful")
+                Log.d("Fetch Animal Data From Firebase", animalData.toString())
+                navController.popBackStack()
+                navController.navigate(Screen.LoginScreen.route)
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Fetch Animal Data From Firebase", exception.stackTraceToString())
+                MainActivity().finish()
+                exitProcess(1)
+            }
     }
 
     Surface(

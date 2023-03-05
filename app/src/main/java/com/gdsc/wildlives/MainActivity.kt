@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gdsc.wildlives.navigation.Navigation
+import com.gdsc.wildlives.pages.detail.DetailViewModel
 import com.gdsc.wildlives.pages.login.LoginViewModel
 import com.gdsc.wildlives.pages.search.SearchViewModel
 import com.gdsc.wildlives.ui.theme.MainUiTheme
@@ -25,11 +26,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val loginViewModel: LoginViewModel = viewModel()
             val searchViewModel: SearchViewModel = viewModel()
+            val detailViewModel: DetailViewModel = viewModel()
 
             MainUiTheme {
                 MainApp(
                     loginViewModel = loginViewModel,
-                    searchViewModel = searchViewModel
+                    searchViewModel = searchViewModel,
+                    detailViewModel = detailViewModel
                 )
             }
         }
@@ -38,13 +41,15 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MainApp(
         loginViewModel: LoginViewModel,
-        searchViewModel: SearchViewModel
+        searchViewModel: SearchViewModel,
+        detailViewModel: DetailViewModel
     ) {
         MainUiTheme {
             Surface(color = colorPrimary) {
                 Navigation(
                     loginViewModel = loginViewModel,
-                    searchViewModel = searchViewModel
+                    searchViewModel = searchViewModel,
+                    detailViewModel = detailViewModel
                 )
             }
         }

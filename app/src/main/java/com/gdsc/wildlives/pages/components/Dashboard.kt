@@ -58,7 +58,9 @@ fun Dashboard(
         floatingActionButton = {
             FloatingActionButton(
                 shape = CircleShape,
-                onClick = {},
+                onClick = {
+
+                },
                 contentColor = Color.White,
                 backgroundColor = colorPrimary
             ) {
