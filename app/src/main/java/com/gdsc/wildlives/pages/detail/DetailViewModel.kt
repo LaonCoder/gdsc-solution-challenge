@@ -21,7 +21,6 @@ class DetailViewModel : ViewModel() {
     val detailUiState = _detailUiState.asStateFlow()
 
     fun onAnimalNamePassed(animalName: String) {
-
     }
 
 }

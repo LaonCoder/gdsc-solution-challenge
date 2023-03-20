@@ -1,4 +1,4 @@
-package com.gdsc.wildlives.pages.detail
+package com.gdsc.wildlives.pages.classification
 
 
 import androidx.lifecycle.ViewModel
@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.*
 import java.util.*
 
 @OptIn(FlowPreview::class)
-class DetailViewModel : ViewModel() {
+class ClassificationViewModel : ViewModel() {
 
-    private val _detailUiState = MutableStateFlow(DetailUiState())
-    val detailUiState = _detailUiState.asStateFlow()
+    private val _classificationUiState = MutableStateFlow(ClassificationUiState())
+    val classificationUiState = _classificationUiState.asStateFlow()
 
     fun onAnimalNamePassed(animalName: String) {
 
@@ -18,6 +18,6 @@ class DetailViewModel : ViewModel() {
 
 }
 
-data class DetailUiState(
+data class ClassificationUiState(
     val animalName: String = ""
 )

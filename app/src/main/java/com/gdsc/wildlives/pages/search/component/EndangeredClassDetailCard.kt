@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import com.gdsc.wildlives.data.AnimalData
 
 @Composable
-fun RedListDetailCard(
+fun EndangeredClassDetailCard(
     animalData: AnimalData
 ) {
     val isClicked by remember { mutableStateOf(false) }
@@ -71,12 +71,6 @@ fun RedListDetailCard(
                 text = animalData.name.replaceFirstChar { it.uppercase() },
                 color = Color.White
             )
-
-            Icon(
-                imageVector = Icons.Default.ExpandMore,
-                contentDescription = null,
-                tint = Color.White
-            )
         }
     }
 }
@@ -84,8 +78,8 @@ fun RedListDetailCard(
 
 @Composable
 @Preview
-fun RedListDetailCardPrev() {
-    RedListDetailCard(animalData =
+fun EndangeredClassDetailCardPrev() {
+    EndangeredClassDetailCard(animalData =
         AnimalData(
             "Red panda", "Mammal", "EN", "https://cdn.pixabay.com/photo/2020/06/13/00/41/redpanda-5292233_1280.jpg"
         )

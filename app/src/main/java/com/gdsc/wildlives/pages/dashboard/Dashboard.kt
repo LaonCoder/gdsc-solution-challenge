@@ -27,8 +27,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.gdsc.wildlives.ml.PracticeModel
+import com.gdsc.wildlives.data.animalClassificationList
+import com.gdsc.wildlives.ml.Sample
 import com.gdsc.wildlives.pages.CheckoutScreen
+import com.gdsc.wildlives.pages.profile.ProfileViewModel
+import com.gdsc.wildlives.pages.profile.Screen.ProfileScreen
 import com.gdsc.wildlives.pages.search.SearchViewModel
 import com.gdsc.wildlives.pages.search.screen.SearchScreen
 import com.gdsc.wildlives.ui.theme.colorPrimary
@@ -47,6 +50,7 @@ fun Dashboard(
     navController: NavController,
     dashboardViewModel: DashboradViewModel,
     searchViewModel: SearchViewModel,
+    profileViewModel: ProfileViewModel,
     cameraPermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>
 ) {
     val dashboardUiState = dashboardViewModel?.dashboardUiState?.collectAsState()?.value
@@ -55,7 +59,6 @@ fun Dashboard(
     val sectionState = remember { mutableStateOf(DashboardSection.Search) }
     val navItems = DashboardSection.values().toList()
     val context = LocalContext.current
-
 
     val takePhotoFromCameraLauncher =
         rememberLauncherForActivityResult(
@@ -70,7 +73,7 @@ fun Dashboard(
                 image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false)
 
                 try {
-                    val model = PracticeModel.newInstance(context)  // Get ML model.
+                    val model = Sample.newInstance(context)  // Get ML model.
 
                     // Creates inputs for reference.
                     val inputFeature0: TensorBuffer =
@@ -95,7 +98,7 @@ fun Dashboard(
                     inputFeature0.loadBuffer(byteBuffer)
 
                     // Runs model inference and gets result.
-                    val outputs: PracticeModel.Outputs = model.process(inputFeature0)
+                    val outputs: Sample.Outputs = model.process(inputFeature0)
                     val outputFeature0: TensorBuffer = outputs.outputFeature0AsTensorBuffer
                     val confidences: FloatArray = outputFeature0.floatArray
 
@@ -109,30 +112,14 @@ fun Dashboard(
                         }
                     }
 
-                    // Classes
-                    val classes = arrayOf(
-                        "Antelope", "Badger", "Bat", "Bear", "Bee",
-                        "Beetle", "Bison", "Boar", "ButterFly", "Cat",
-                        "Caterpillar", "Chimpanzee", "Cockroach", "Cow", "Coyote",
-                        "Crab", "Crow", "Deer", "Dog", "Dolphin",
-                        "Donkey", "Dragonfly", "Duck", "Eagle", "Elephant",
-                        "Flamingo", "Fly", "Fox", "Goat", "GoldFish",
-                        "Goose", "Gorilla", "Grasshopper", "Hamster", "Hare",
-                        "Hedgehog", "Hippopotamus", "Hornbill", "Horse", "Hummingbird",
-                        "Hyena", "Jellyfish", "Kangaroo", "Koala", "Ladybug",
-                        "Leopard", "Lion", "Lizard", "Lobster", "Mosquito",
-                        "Moth", "Mouse", "Octopus", "Okapi", "Orangutan",
-                        "Otter", "Owl", "Ox", "Oyster", "Panda",
-                        "Parrot", "Pelecaniformes", "Penguin", "Pig", "Pigeon",
-                        "Porcupine", "Possum", "Raccoon", "Rat", "Reindeer",
-                        "Rhinoceros", "Sandpiper", "Seahorse", "Seal", "Shark",
-                        "Sheep", "Snake", "Sparrow", "Squid", "Squirrel",
-                        "Starfish", "Swan", "Tiger", "Turkey", "Turtle",
-                        "Whale", "Wolf", "Wombat", "Woodpecker","Zebra"
-                    )
+                    // TODO : 샘플 모델 이외의 모델을 사용할 경우 아래 클래스 리스트 수정하기
+                    val classes = animalClassificationList
 
                     Log.d("Classified", classes[maxPos])
-                    dashboardViewModel?.onClassifiedChanged(classified = classes[maxPos], bitmapImage = image)
+                    dashboardViewModel?.onClassifiedChanged(
+                        classified = classes[maxPos],
+                        bitmapImage = image
+                    )
 
 
 
@@ -143,7 +130,6 @@ fun Dashboard(
                 }
             }
         }
-
 
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
@@ -203,6 +189,10 @@ fun Dashboard(
                     searchViewModel = searchViewModel
                 )
                 DashboardSection.Collect -> CheckoutScreen()
+                DashboardSection.Profile -> ProfileScreen(
+                    navController = navController,
+                    profileViewModel = profileViewModel
+                )
                 else -> {}
             }
         }

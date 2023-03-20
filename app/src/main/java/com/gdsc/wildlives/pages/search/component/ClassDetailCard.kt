@@ -82,12 +82,6 @@ fun ClassDetailCard(
                 text = animalData.name.replaceFirstChar { it.uppercase() },
                 color = Color.White
             )
-
-            Icon(
-                imageVector = Icons.Default.ExpandMore,
-                contentDescription = null,
-                tint = Color.White
-            )
         }
     }
 }

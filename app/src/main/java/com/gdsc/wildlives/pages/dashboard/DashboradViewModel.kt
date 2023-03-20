@@ -17,6 +17,7 @@ class DashboradViewModel : ViewModel() {
 }
 
 data class DashboardUiState(
+    var onPhotoTaken: Boolean = false,
     var classified: String = "",
     var bitmapImage: Bitmap? = null
 )

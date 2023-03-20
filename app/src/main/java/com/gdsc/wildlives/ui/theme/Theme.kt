@@ -41,25 +41,6 @@ fun MainUiTheme(
         LightColorPalette
     }
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
-}
-
-@Composable
-fun SearchUiTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
-) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setStatusBarColor(color = Color.Transparent)

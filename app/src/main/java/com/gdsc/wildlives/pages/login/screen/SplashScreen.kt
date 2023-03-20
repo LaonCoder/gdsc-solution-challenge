@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -67,7 +68,6 @@ fun SplashScreen(
                     animalData.add(document.toObject())
 
                 }
-                Log.d("Fetch Animal Data From Firebase", "Successful")
                 Log.d("Fetch Animal Data From Firebase", animalData.toString())
                 navController.popBackStack()
                 navController.navigate(Screen.LoginScreen.route)
@@ -79,7 +79,7 @@ fun SplashScreen(
             }
     }
 
-    Surface(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -88,7 +88,7 @@ fun SplashScreen(
                 .fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf( colorPrimary, colorSecondary )
+                        colors = listOf( colorPrimary, Color(0xFF96D312))
                     )
                 ),
             verticalArrangement = Arrangement.Center,
@@ -100,7 +100,7 @@ fun SplashScreen(
                     painter = painterResource(id = R.drawable.splash_logo),
                     contentDescription = "Logo",
                     modifier = Modifier.weight(3f)
-                )                
+                )
                 Spacer(modifier = Modifier.weight(1f))
             }
         }

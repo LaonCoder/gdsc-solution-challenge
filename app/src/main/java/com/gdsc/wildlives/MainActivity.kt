@@ -21,6 +21,7 @@ import com.gdsc.wildlives.navigation.Navigation
 import com.gdsc.wildlives.pages.dashboard.DashboradViewModel
 import com.gdsc.wildlives.pages.detail.DetailViewModel
 import com.gdsc.wildlives.pages.login.LoginViewModel
+import com.gdsc.wildlives.pages.profile.ProfileViewModel
 import com.gdsc.wildlives.pages.search.SearchViewModel
 import com.gdsc.wildlives.ui.theme.MainUiTheme
 import com.gdsc.wildlives.ui.theme.colorPrimary
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
             val searchViewModel: SearchViewModel = viewModel()
             val detailViewModel: DetailViewModel = viewModel()
             val dashboardViewModel: DashboradViewModel = viewModel()
+            val profileViewModel: ProfileViewModel = viewModel()
 
             // Permissions
             val dialogQueue = mainViewModel.visiblePermissionDialogQueue
@@ -56,12 +58,13 @@ class MainActivity : ComponentActivity() {
                 }
             )
 
-            MainUiTheme {
+            MainUiTheme() {
                 MainApp(
                     loginViewModel = loginViewModel,
                     searchViewModel = searchViewModel,
                     detailViewModel = detailViewModel,
                     dashboardViewModel = dashboardViewModel,
+                    profileViewModel = profileViewModel,
                     cameraPermissionResultLauncher = cameraPermissionResultLauncher
                 )
             }
@@ -95,6 +98,7 @@ class MainActivity : ComponentActivity() {
         searchViewModel: SearchViewModel,
         detailViewModel: DetailViewModel,
         dashboardViewModel: DashboradViewModel,
+        profileViewModel: ProfileViewModel,
         cameraPermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>
     ) {
         MainUiTheme {
@@ -104,6 +108,7 @@ class MainActivity : ComponentActivity() {
                     searchViewModel = searchViewModel,
                     detailViewModel = detailViewModel,
                     dashboardViewModel = dashboardViewModel,
+                    profileViewModel = profileViewModel,
                     cameraPermissionResultLauncher = cameraPermissionResultLauncher
                 )
             }

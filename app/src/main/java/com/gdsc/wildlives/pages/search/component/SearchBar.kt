@@ -285,7 +285,7 @@ fun animalListItem(animalData: AnimalData) {
             )
             Column() {
                 Text(text = animalData.name)
-                Text(text = animalData.iucn)
+                Text(text = animalData.endangeredClass)
                 Text(text = animalData.animalClass)
             }
         }

@@ -2,6 +2,7 @@ package com.gdsc.wildlives.repository
 
 import android.util.Log
 import android.widget.Toast
+import com.gdsc.wildlives.data.AnimalData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -45,8 +46,8 @@ class AuthRepository {
                 "name" to userName,
                 "email" to email,
                 "description" to "",
-                "badges" to mutableListOf<String>(),
-                "animals" to mutableListOf<String>()
+                "points" to "",
+                "animals" to mutableListOf<AnimalData>()
             )
             fireStoreRef.set( initialProfile )
                 .addOnSuccessListener { onComplete.invoke(true) }
@@ -71,8 +72,8 @@ class AuthRepository {
                 "name" to userName,
                 "email" to email,
                 "description" to "",
-                "badges" to mutableListOf<String>(),
-                "animals" to mutableListOf<String>()
+                "points" to 0,
+                "animals" to mutableListOf<AnimalData>()
             )
             fireStoreRef.set( initialProfile )
                 .addOnSuccessListener {

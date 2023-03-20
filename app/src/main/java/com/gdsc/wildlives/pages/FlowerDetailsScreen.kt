@@ -31,11 +31,7 @@ import com.gdsc.wildlives.ui.theme.*
 fun FlowerDetailsScreen(navController: NavController) {
     val pageCount by remember { mutableStateOf(0) }
     Scaffold(topBar = {
-        TopAppBarWithBack(
-            onBackClick = {
-
-            },
-        )
+        TopAppBarWithBack( navController = navController )
 
     }, backgroundColor = bgwhitelight,
         content = { padding ->

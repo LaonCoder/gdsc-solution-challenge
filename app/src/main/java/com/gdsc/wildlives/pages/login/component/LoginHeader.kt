@@ -21,12 +21,11 @@ fun LoginHeader() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.header_background_image),
+                painter = painterResource(id = R.drawable.auth_background_image),
                 contentDescription = "login_bg",
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 40.dp)
             )
             Column(
                 modifier = Modifier.padding(bottom = 40.dp),

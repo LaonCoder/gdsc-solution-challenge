@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.gdsc.wildlives.data.AnimalClass
 import com.gdsc.wildlives.data.AnimalData
-import com.gdsc.wildlives.data.IucnRedList
+import com.gdsc.wildlives.data.EndangeredClassList
 import com.gdsc.wildlives.data.animalData
 import com.gdsc.wildlives.pages.search.SearchUiState
 import com.gdsc.wildlives.pages.search.SearchViewModel
@@ -67,7 +67,7 @@ fun SearchSlideSection(
     // Initial SlideBar Condition
     LaunchedEffect(key1 = firstDisplayed) {
         searchViewModel?.onAnimalClassChange(AnimalClass.Mammals.name)
-        searchViewModel?.onRedListChange(IucnRedList.EX.name)
+        searchViewModel?.onRedListChange(EndangeredClassList.ONE.name)
         searchViewModel?.createTodaysAnimalList()
         firstDisplayed = false
     }
@@ -76,10 +76,10 @@ fun SearchSlideSection(
     LaunchedEffect(Unit) {
         while(true) {
             yield()
-            delay(2000)
+            delay(8000)
             pagerState.animateScrollToPage(
                 page = (pagerState.currentPage + 1) % (pagerState.pageCount),
-                animationSpec = tween(600)
+                animationSpec = tween(1500)
             )
         }
     }
@@ -233,6 +233,7 @@ fun SearchSlideSection(
                         )
                     }
                 }
+
                 Icon(
                     modifier = Modifier.size(16.dp),
                     imageVector = Icons.Default.ArrowForwardIos,
@@ -248,8 +249,8 @@ fun SearchSlideSection(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
-                        .padding(horizontal = 20.dp)
+                        .height(170.dp)
+                        .padding(vertical = 10.dp, horizontal = 20.dp)
                     ,
                     contentAlignment = Alignment.Center
                 ) {
@@ -270,8 +271,8 @@ fun SearchSlideSection(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Log.d("AnimalData", searchUiState?.currentAnimalClassList.toString())
-                    if (searchUiState!!.currentAnimalClassList.size > 3) {
-                        items(searchUiState!!.currentAnimalClassList.subList(0, 3)) {
+                    if (searchUiState!!.currentAnimalClassList.size > 15) {
+                        items(searchUiState!!.currentAnimalClassList.subList(0, 15)) {
                             ClassDetailCard(
                                 animalData = it,
                                 navController = navController
@@ -301,7 +302,7 @@ fun SearchSlideSection(
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "IUCN Red List",
+                text = "Endangered Species",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 20.dp)
@@ -310,110 +311,42 @@ fun SearchSlideSection(
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(top = 5.dp, bottom = 10.dp, start = 20.dp, end = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = Icons.Default.ArrowBackIos,
-                    contentDescription = null,
-                    tint = ghost_gray
+                EndangeredClassInfoButton(
+                    searchViewModel = searchViewModel,
+                    searchUiState = searchUiState,
+                    title = EndangeredClassList.ONE.name,
+                    textColor = Color.White,
+                    backgroundColor = endangered_class_1_color,
                 )
-                LazyRow(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(30.dp))
-                    ,
-                    contentPadding = PaddingValues(3.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel, searchUiState = searchUiState,
-                            title = IucnRedList.EX.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_ex_color,
-                        )
-                    }
 
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.EW.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_ew_color
-                        )
-                    }
+                EndangeredClassInfoButton(
+                    searchViewModel = searchViewModel,
+                    searchUiState = searchUiState,
+                    title = EndangeredClassList.TWO.name,
+                    textColor = Color.White,
+                    backgroundColor = endangered_class_2_color,
+                )
 
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.CR.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_cr_color,
-                        )
-                    }
 
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.EN.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_en_color,
-                        )
-                    }
-
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.VU.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_vu_color,
-                        )
-                    }
-
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.NT.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_nt_color,
-                        )
-                    }
-
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.LC.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_lc_color,
-                        )
-                    }
-
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.DD.name,
-                            textColor = Color.White,
-                            backgroundColor = iucn_dd_color,
-                        )
-                    }
-
-                    item {
-                        RedListInfoButton( searchViewModel = searchViewModel,  searchUiState = searchUiState,
-                            title = IucnRedList.NE.name,
-                            textColor = Color.LightGray,
-                            backgroundColor = iucn_ne_color,
-                        )
-                    }
-                }
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = Icons.Default.ArrowForwardIos,
-                    contentDescription = null,
-                    tint = ghost_gray
+                EndangeredClassInfoButton(
+                    searchViewModel = searchViewModel,
+                    searchUiState = searchUiState,
+                    title = EndangeredClassList.NONE.name,
+                    textColor = Color.White,
+                    backgroundColor = endangered_class_none_color,
                 )
             }
 
-            if (searchUiState!!.currentRedList.isNullOrEmpty()) {
+            if (searchUiState!!.currentEndangeredClassList.isNullOrEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
-                        .padding(horizontal = 20.dp)
+                        .height(180.dp)
+                        .padding(vertical = 10.dp, horizontal = 20.dp)
                     ,
                     contentAlignment = Alignment.Center
                 ) {
@@ -433,9 +366,9 @@ fun SearchSlideSection(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (searchUiState!!.currentRedList.size > 3) {
-                        items(searchUiState!!.currentRedList.subList(0, 3)) {
-                            RedListDetailCard(animalData = it)
+                    if (searchUiState!!.currentEndangeredClassList.size > 15) {
+                        items(searchUiState!!.currentEndangeredClassList.subList(0, 15)) {
+                            EndangeredClassDetailCard(animalData = it)
                         }
                         item {
                             Box (
@@ -451,13 +384,15 @@ fun SearchSlideSection(
                             }
                         }
                     } else {
-                        items(searchUiState!!.currentRedList) {
-                            RedListDetailCard(animalData = it)
+                        items(searchUiState!!.currentEndangeredClassList) {
+                            EndangeredClassDetailCard(animalData = it)
                         }
                     }
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(40.dp))
     }
 }
 

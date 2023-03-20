@@ -1,4 +1,4 @@
-package com.gdsc.wildlives.pages.detail.screen
+package com.gdsc.wildlives.pages.classification.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

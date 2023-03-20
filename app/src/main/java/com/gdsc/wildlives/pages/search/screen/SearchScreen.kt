@@ -40,59 +40,57 @@ fun SearchScreen(
     val searchUiState = searchViewModel?.searchUiState?.collectAsState()?.value
     val context = LocalContext.current
 
-    SearchUiTheme() {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(color = ghost_white),
-        ) {
-            Box(modifier = Modifier.align(Alignment.TopCenter)) {
-                Image(
-                    painter = painterResource(id = R.drawable.search_header_image),
-                    contentDescription = "search_bg",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .zIndex(-1f)
-                )
-                Column(
-                    modifier = Modifier.statusBarsPadding(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Spacer(modifier = Modifier.height(160.dp))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(color = ghost_white),
+    ) {
+        Box(modifier = Modifier.align(Alignment.TopCenter)) {
+            Image(
+                painter = painterResource(id = R.drawable.search_header_image),
+                contentDescription = "search_bg",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(-1f)
+            )
+            Column(
+                modifier = Modifier.statusBarsPadding(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(modifier = Modifier.height(160.dp))
 
-                    Column(
-                        modifier = Modifier.padding(start = 15.dp, bottom = 15.dp)
-                    ) {
-                        Text(
-                            text = "Discover",
-                            fontSize = 52.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                        )
-                        Text(
-                            text = "new wild animals",
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                        )
-                    }
+                Column(
+                    modifier = Modifier.padding(start = 15.dp, bottom = 15.dp)
+                ) {
+                    Text(
+                        text = "Discover",
+                        fontSize = 52.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    )
+                    Text(
+                        text = "new wild animals",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    )
                 }
             }
-
-            SearchSlideSection(
-                searchViewModel = searchViewModel,
-                searchUiState = searchUiState,
-                navController = navController,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
-
-            SearchBar(
-                searchViewModel = searchViewModel,
-                searchUiState = searchUiState,
-            )
         }
+
+        SearchSlideSection(
+            searchViewModel = searchViewModel,
+            searchUiState = searchUiState,
+            navController = navController,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+
+        SearchBar(
+            searchViewModel = searchViewModel,
+            searchUiState = searchUiState,
+        )
     }
 }
 

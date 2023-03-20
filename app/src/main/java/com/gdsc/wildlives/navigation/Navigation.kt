@@ -18,6 +18,7 @@ import com.gdsc.wildlives.pages.detail.screen.DetailScreen
 import com.gdsc.wildlives.pages.login.LoginScreen
 import com.gdsc.wildlives.pages.login.LoginViewModel
 import com.gdsc.wildlives.pages.login.SignUpScreen
+import com.gdsc.wildlives.pages.profile.ProfileViewModel
 import com.gdsc.wildlives.pages.search.SearchViewModel
 import com.gdsc.wildlives.pages.splash.SplashScreen
 import kotlinx.serialization.decodeFromString
@@ -29,6 +30,7 @@ fun Navigation(
     searchViewModel: SearchViewModel,
     detailViewModel: DetailViewModel,
     dashboardViewModel: DashboradViewModel,
+    profileViewModel: ProfileViewModel,
     cameraPermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>
 ) {
     val navController = rememberNavController()
@@ -62,12 +64,9 @@ fun Navigation(
                 navController = navController,
                 dashboardViewModel = dashboardViewModel,
                 searchViewModel = searchViewModel,
+                profileViewModel = profileViewModel,
                 cameraPermissionResultLauncher = cameraPermissionResultLauncher
             )
-        }
-
-        composable(Screen.DetailsScreen.route) {
-
         }
 
         composable(

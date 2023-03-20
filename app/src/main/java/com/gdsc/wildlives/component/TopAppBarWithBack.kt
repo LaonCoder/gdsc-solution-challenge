@@ -8,27 +8,38 @@ import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.gdsc.wildlives.ui.theme.dark_gray
+import com.gdsc.wildlives.ui.theme.ghost_white
 
 @Composable
-fun TopAppBarWithBack(onBackClick: () -> Unit) {
+fun TopAppBarWithBack(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
+            .systemBarsPadding()
+            .padding(start = 10.dp, top = 10.dp)
+        ,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { onBackClick() }) {
+        IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "On Back",
-                tint = dark_gray,
-                modifier = Modifier.size(32.dp, 32.dp)
-
+                tint = ghost_white,
+                modifier = Modifier.size(50.dp)
             )
         }
 
     }
+}
+
+@Preview
+@Composable
+fun TopAppBarWithBackPrev() {
+    TopAppBarWithBack(navController = rememberNavController())
 }

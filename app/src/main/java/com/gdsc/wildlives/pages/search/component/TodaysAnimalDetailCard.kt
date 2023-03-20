@@ -5,10 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
@@ -79,13 +76,14 @@ fun TodaysAnimalDetailCard(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(start = 10.dp, bottom = 5.dp, end = 5.dp)
+                .padding(start = 15.dp, bottom = 10.dp, end = 5.dp)
             ,
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
                 text = animalData.name.replaceFirstChar { it.uppercase() },
-                color = Color.White
+                color = Color.White,
+                style = MaterialTheme.typography.h6
             )
         }
     }

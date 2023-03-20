@@ -32,11 +32,11 @@ class SearchViewModel : ViewModel() {
         }
     }
 
-    fun onRedListChange(currentRedListCategory: String) {
+    fun onRedListChange(currentEndangeredClass: String) {
         _searchUiState.update { uiState ->
             uiState.copy(
-                currentRedListCategory = currentRedListCategory,
-                currentRedList = animalData.filter { it.iucn == currentRedListCategory }.shuffled()
+                currentEndangeredClass = currentEndangeredClass,
+                currentEndangeredClassList = animalData.filter { it.endangeredClass == currentEndangeredClass }.shuffled()
             )
         }
     }
@@ -98,8 +98,8 @@ data class SearchUiState(
     val currentAnimalClass: String = "",
     val currentAnimalClassList: List<AnimalData> = listOf(),
 
-    val currentRedListCategory: String = "",
-    val currentRedList: List<AnimalData> = listOf(),
+    val currentEndangeredClass: String = "",
+    val currentEndangeredClassList: List<AnimalData> = listOf(),
 
     val todaysAnimalList: List<AnimalData> = listOf(),
 )
