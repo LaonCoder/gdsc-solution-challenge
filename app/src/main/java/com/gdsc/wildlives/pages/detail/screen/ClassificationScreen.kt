@@ -39,7 +39,10 @@ import com.gdsc.wildlives.component.TopAppBarWithBack
 import com.gdsc.wildlives.data.AnimalClass
 import com.gdsc.wildlives.data.AnimalData
 import com.gdsc.wildlives.data.EndangeredClassList
+import com.gdsc.wildlives.data.animalData
 import com.gdsc.wildlives.pages.detail.DetailViewModel
+import com.gdsc.wildlives.pages.detail.component.EndangeredClassIcon
+import com.gdsc.wildlives.pages.detail.component.GoogleSearchButton
 import com.gdsc.wildlives.pages.login.LoginViewModel
 import com.gdsc.wildlives.ui.theme.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -47,12 +50,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import java.lang.Math.pow
 
 @Composable
-fun DetailScreen(
+fun ClassificationScreen(
     animalData: AnimalData?,
     navController: NavController,
     detailViewModel: DetailViewModel?
 ) {
     val scrollState = rememberScrollState()
+    val detailUiState = detailViewModel?.detailUiState?.collectAsState()?.value
 
     Box {
         Column(modifier = Modifier
@@ -121,7 +125,7 @@ fun DetailScreen(
                             modifier = Modifier.offset(y = -(3.dp)),
                             text = buildAnnotatedString {
                                 append("( ")
-                                append("Ailurus fulgens")
+                                append(animalData!!.scientificName)
                                 append(" )")
                             },
                             color = Color.Gray,
@@ -129,7 +133,7 @@ fun DetailScreen(
                             fontWeight = FontWeight.Normal
                         )
                         Spacer(modifier = Modifier.width(15.dp))
-                        EndangeredClassIcon(animalData.endangeredClass)
+                        EndangeredClassIcon(animalData!!.endangeredClass)
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -166,7 +170,7 @@ fun DetailScreen(
                                 .fillMaxWidth()
                                 .padding(top = 10.dp, bottom = 15.dp, start = 25.dp, end = 25.dp)
                             ,
-                            text = "  " + "The Red Panda is a small animal, roughly the size of a domestic cat, with reddish-brown fur and a long, bushy tail with distinctive white markings. They have round ears and a masked face, which is white with reddish-brown tear markings. They have sharp claws and semi-retractable claws that help them climb trees with ease.",
+                            text = "  " + animalData!!.description,
                             style = MaterialTheme.typography.body1,
                             color = Color.DarkGray
                         )
@@ -212,7 +216,7 @@ fun DetailScreen(
                     SpecificationRow(
                         icon = Icons.Default.Pets,
                         title = "ANIMAL CLASS",
-                        text = "Mammals"
+                        text = animalData!!.animalClass
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -220,7 +224,7 @@ fun DetailScreen(
                     SpecificationRow(
                         icon = Icons.Default.Straighten,
                         title = "LENGTH",
-                        text = "51 – 63.5 cm (20.1 – 25.0 in)"
+                        text = animalData!!.length
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -228,7 +232,7 @@ fun DetailScreen(
                     SpecificationRow(
                         icon = Icons.Default.Scale,
                         title = "WEIGHT",
-                        text = "3.2 - 15 kg (7.1 - 33.1 lb)"
+                        text = animalData!!.weight
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -236,7 +240,7 @@ fun DetailScreen(
                     SpecificationRow(
                         icon = Icons.Default.Forest,
                         title = "HABITATS",
-                        text = "Forest, Shrubland"
+                        text = animalData!!.habitats
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -250,142 +254,21 @@ fun DetailScreen(
             }
         }
 
-        TopAppBarWithBack(navController = navController)
-    }
-}
-
-@Composable
-fun SpecificationRow(
-    icon: ImageVector,
-    title: String,
-    text: String,
-) {
-    Row(
-        modifier = Modifier
-            .padding(start = 30.dp)
-        ,
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            modifier = Modifier.size(38.dp),
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color.White
+        TopAppBarWithBack(
+            navController = navController,
+            animalData = animalData,
+            detailViewModel = detailViewModel,
+            detailUiState = detailUiState,
+            isClassified = true
         )
-        Spacer(modifier = Modifier.width(20.dp))
-        Column() {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text(
-                modifier = Modifier.offset(y = -(2.dp)),
-                text = text,
-                style = MaterialTheme.typography.subtitle1,
-                color = ghost_white
-            )
-        }
     }
 }
 
-
-@Composable
-fun EndangeredClassIcon(
-    endangeredClass: String
-) {
-    if (endangeredClass == EndangeredClassList.ONE.name) {
-        Box(
-            modifier = Modifier
-                .background(endangered_class_1_color, RoundedCornerShape(10.dp))
-                .padding(vertical = 2.dp, horizontal = 10.dp)
-            ,
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "CLASS 1",
-                color = Color.White,
-                style = MaterialTheme.typography.subtitle1,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    } else if (endangeredClass == EndangeredClassList.TWO.name) {
-        Box(
-            modifier = Modifier
-                .background(endangered_class_2_color)
-                .padding(20.dp)
-            ,
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "CLASS 2",
-                color = Color.White,
-                style = MaterialTheme.typography.h5,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-
-@Composable
-fun GoogleSearchButton(
-    animalName: String
-) {
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
-
-    Button(
-        modifier = Modifier
-            .offset(y = -(20.dp))
-            .fillMaxWidth()
-        ,
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 2.dp,
-            pressedElevation = 4.dp,
-            disabledElevation = 0.dp
-        ),
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(width = 1.dp, color = Color.LightGray),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-        onClick = {
-            val searchUri = "https://www.google.com/search?q=$animalName"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(searchUri))
-            launcher.launch(intent)
-        }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-            ,
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = R.drawable.google_logo),
-                contentDescription = "Google Login Button"
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-                text = "Search On Google",
-                color = Color.DarkGray,
-                fontSize = 18.sp
-            )
-        }
-    }
-}
 
 @Composable
 @Preview
-fun DetailScreenPrev() {
-    DetailScreen(
-        animalData =
-        AnimalData(
-            "Red panda", "Mammal", "EN", "https://cdn.pixabay.com/photo/2020/06/13/00/41/redpanda-5292233_1280.jpg"
-        ),
+fun ClassificationScreenPrev() {
+    ClassificationScreen(
+        animalData = animalData[0],
         navController = rememberNavController(), detailViewModel = null)
 }

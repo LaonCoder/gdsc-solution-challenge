@@ -66,7 +66,6 @@ fun SplashScreen(
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     animalData.add(document.toObject())
-
                 }
                 Log.d("Fetch Animal Data From Firebase", animalData.toString())
                 navController.popBackStack()

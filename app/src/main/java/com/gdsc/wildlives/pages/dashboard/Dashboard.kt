@@ -16,10 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,8 +26,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.gdsc.wildlives.data.animalClassificationList
+import com.gdsc.wildlives.data.animalData
 import com.gdsc.wildlives.ml.Sample
-import com.gdsc.wildlives.pages.CheckoutScreen
+import com.gdsc.wildlives.navigation.Screen
+import com.gdsc.wildlives.pages.EncyclopediaScreen
+import com.gdsc.wildlives.pages.donate.DonateViewModel
+import com.gdsc.wildlives.pages.donate.screen.DonateScreen
+import com.gdsc.wildlives.pages.encyclopedia.EncyclopediaViewModel
 import com.gdsc.wildlives.pages.profile.ProfileViewModel
 import com.gdsc.wildlives.pages.profile.Screen.ProfileScreen
 import com.gdsc.wildlives.pages.search.SearchViewModel
@@ -38,9 +41,12 @@ import com.gdsc.wildlives.ui.theme.colorPrimary
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.IOException
+import java.net.URLEncoder
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -51,14 +57,37 @@ fun Dashboard(
     dashboardViewModel: DashboradViewModel,
     searchViewModel: SearchViewModel,
     profileViewModel: ProfileViewModel,
+    encyclopediaViewModel: EncyclopediaViewModel,
+    donateViewModel: DonateViewModel,
     cameraPermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>
 ) {
     val dashboardUiState = dashboardViewModel?.dashboardUiState?.collectAsState()?.value
 
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-    val sectionState = remember { mutableStateOf(DashboardSection.Search) }
+    val sectionState = rememberSaveable{ mutableStateOf(DashboardSection.Search) }
     val navItems = DashboardSection.values().toList()
     val context = LocalContext.current
+
+
+    LaunchedEffect(key1 = dashboardUiState?.onPhotoTaken) {
+        if (dashboardUiState?.onPhotoTaken != false) {
+            val classifiedAnimal = animalData.find { it.name == dashboardUiState!!.classified }
+            Log.d("Classified Animal", classifiedAnimal.toString())
+
+            val passingAnimalData = classifiedAnimal?.copy(
+                imageUrl = URLEncoder.encode(classifiedAnimal.imageUrl, "UTF-8"),
+                photoTakenTime = dashboardUiState?.currentTime
+            )
+
+            val animalDataJson = Json.encodeToString(passingAnimalData)
+            Log.d("animalJson", animalDataJson)
+
+            navController.navigate(Screen.ClassificationScreen.route + "?animal=${animalDataJson}")
+
+            dashboardViewModel?.resetState();
+        }
+    }
+
 
     val takePhotoFromCameraLauncher =
         rememberLauncherForActivityResult(
@@ -113,23 +142,25 @@ fun Dashboard(
                     }
 
                     // TODO : 샘플 모델 이외의 모델을 사용할 경우 아래 클래스 리스트 수정하기
-                    val classes = animalClassificationList
+                    val classified = animalClassificationList[maxPos]
+                    Log.d("Classified", classified)
 
-                    Log.d("Classified", classes[maxPos])
                     dashboardViewModel?.onClassifiedChanged(
-                        classified = classes[maxPos],
+                        onPhotoTaken = true,
+                        currentTime = System.currentTimeMillis().toString(),
+                        classified = classified,
                         bitmapImage = image
                     )
 
-
-
                     // Releases model resources if no longer used.
                     model.close()
+
                 } catch (e: IOException) {
                     Log.d("Error", "Cannot take pictures.")
                 }
             }
         }
+
 
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
@@ -188,7 +219,14 @@ fun Dashboard(
                     navController = navController,
                     searchViewModel = searchViewModel
                 )
-                DashboardSection.Collect -> CheckoutScreen()
+                DashboardSection.Collect -> EncyclopediaScreen(
+                    navController = navController,
+                    encyclopediaViewModel = encyclopediaViewModel
+                )
+                DashboardSection.Donate -> DonateScreen(
+                    navController = navController,
+                    donateViewModel = donateViewModel
+                )
                 DashboardSection.Profile -> ProfileScreen(
                     navController = navController,
                     profileViewModel = profileViewModel
@@ -215,7 +253,7 @@ private fun BottomBar(
 
             val selected = section == currentSection
 
-            if (section.sectionName == "trail") {
+            if (section.sectionName == "donate") {
                 Spacer(modifier = Modifier.width((80.dp)))
             }
 
@@ -243,6 +281,6 @@ private enum class DashboardSection(
 ) {
     Search("search", Icons.Default.Search),
     Collect("collect", Icons.Default.ViewModule),
-    Trail("trail", Icons.Default.Landscape),
+    Donate("donate", Icons.Default.VolunteerActivism),
     Profile("profile", Icons.Default.Person),
 }

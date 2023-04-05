@@ -13,10 +13,7 @@ import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.WorkspacePremium
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.gdsc.wildlives.R
 import com.gdsc.wildlives.component.TopAppBarWithBack
+import com.gdsc.wildlives.pages.profile.ProfileUiState
 import com.gdsc.wildlives.pages.profile.ProfileViewModel
 import com.gdsc.wildlives.pages.search.SearchViewModel
 import com.gdsc.wildlives.pages.search.component.ClassDetailCard
@@ -55,10 +53,12 @@ fun ProfileScreen(
     navController: NavController,
     profileViewModel: ProfileViewModel?
 ) {
+    var firstDisplayed by remember { mutableStateOf(true) }
     val profileUiState = profileViewModel?.profileUiState?.collectAsState()?.value
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = firstDisplayed) {
         profileViewModel?.loadUserProfile()
+        firstDisplayed = false
     }
 
     Column(
@@ -227,7 +227,7 @@ fun ProfileScreen(
                             Text(
                                 text = buildAnnotatedString {
                                     append(numberFormat(profileUiState!!.userPoints))
-                                    append("PTS")
+                                    append(" PTS")
                                 },
                                 style = MaterialTheme.typography.subtitle1,
                                 fontWeight = FontWeight.Bold,
@@ -251,7 +251,7 @@ fun ProfileScreen(
                                 else -> ""
                             },
                             fontWeight = FontWeight.Bold,
-                            fontSize = 30.sp,
+                            fontSize = 28.sp,
                             color = Color.White
                         )
                     }
@@ -286,7 +286,7 @@ fun ProfileScreen(
                             .height(45.dp)
                             .background(Color.White, RoundedCornerShape(30.dp))
                     ) {
-                        ProgressBar()
+                        ProgressBar(profileUiState)
                     }
                 }
             }
@@ -308,7 +308,7 @@ fun ProfileScreen(
                         append("MY ANIMAL ")
                     }
                     append("(")
-                    append("4")
+                    append(profileUiState!!.userAnimalList.size.toString())
                     append(")")
                 },
                 style = MaterialTheme.typography.subtitle1,
@@ -342,8 +342,8 @@ fun ProfileScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Log.d("My AnimalData", profileUiState?.userAnimalList.toString())
-                    if (profileUiState!!.userAnimalList.size > 3) {
-                        items(profileUiState!!.userAnimalList.subList(0, 3)) {
+                    if (profileUiState!!.userAnimalList.size > 20) {
+                        items(profileUiState!!.userAnimalList.subList(0, 20)) {
                             ClassDetailCard(
                                 animalData = it,
                                 navController = navController
@@ -376,7 +376,9 @@ fun ProfileScreen(
 
 
 @Composable
-fun ProgressBar() {
+fun ProgressBar(
+    profileUiState: ProfileUiState?
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -385,7 +387,10 @@ fun ProgressBar() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        var progress: Int = 75;
+        var progress = getProgress(
+            currentLevel = profileUiState!!.currentLevel,
+            userPoint = profileUiState!!.userPoints
+        )
 
         Box(
             modifier = Modifier
@@ -406,7 +411,7 @@ fun ProgressBar() {
                             )
                         )
                     )
-                    .width(300.dp * progress / 100)
+                    .width(300.dp * progress.toFloat() / 100)
             )
             Text(
                 text = "$progress %",
@@ -419,6 +424,22 @@ fun ProgressBar() {
 
     }
 }
+
+
+private fun getProgress(
+    currentLevel: Int,
+    userPoint: Int
+    ) = when (currentLevel) {
+            8 -> userPoint.toDouble() / 50000 * 100
+            7 -> userPoint.toDouble() / 30000 * 100
+            6 -> userPoint.toDouble() / 20000 * 100
+            5 -> userPoint.toDouble() / 15000 * 100
+            4 -> userPoint.toDouble() / 10000 * 100
+            3 -> userPoint.toDouble() / 6000 * 100
+            2 -> userPoint.toDouble() / 3000 * 100
+            1 -> userPoint.toDouble() / 1000 * 100
+            else -> 100.toDouble()
+        }
 
 
 private fun numberFormat(num: Int): String {

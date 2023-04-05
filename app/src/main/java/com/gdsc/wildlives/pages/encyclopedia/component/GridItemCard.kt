@@ -1,13 +1,11 @@
-package com.gdsc.wildlives.pages.search.component
+package com.gdsc.wildlives.pages.encyclopedia.component
+
 
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +30,7 @@ import kotlinx.serialization.json.Json
 import java.net.URLEncoder
 
 @Composable
-fun ClassDetailCard(
+fun GridItemCard(
     navController: NavController,
     animalData: AnimalData
 ) {
@@ -40,9 +38,9 @@ fun ClassDetailCard(
 
     Box(
         modifier = Modifier
-            .height(170.dp)
-            .width(150.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .height(120.dp)
+            .width(120.dp)
+            .clip(RoundedCornerShape(30.dp))
             .clickable {
                 val passingAnimalData = animalData.copy(imageUrl = URLEncoder.encode(animalData.imageUrl, "UTF-8"))
                 val animalDataJson = Json.encodeToString(passingAnimalData)
@@ -91,8 +89,8 @@ fun ClassDetailCard(
 
 @Composable
 @Preview
-fun ClassficationImageButtonPrev() {
-    ClassDetailCard(
+fun GridItemCardPrev() {
+    GridItemCard(
         animalData =
         AnimalData(
             "Red panda", "Mammal", "EN", "https://cdn.pixabay.com/photo/2020/06/13/00/41/redpanda-5292233_1280.jpg"

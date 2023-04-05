@@ -11,13 +11,37 @@ class DashboradViewModel : ViewModel() {
     private val _dashboardUiState = MutableStateFlow(DashboardUiState())
     val dashboardUiState = _dashboardUiState.asStateFlow()
 
-    fun onClassifiedChanged(classified: String, bitmapImage: Bitmap?) {
-        _dashboardUiState.update { it.copy(classified = classified, bitmapImage = bitmapImage) }
+    fun onClassifiedChanged(
+        onPhotoTaken: Boolean,
+        classified: String,
+        currentTime: String,
+        bitmapImage: Bitmap?
+    ) {
+        _dashboardUiState.update {
+            it.copy(
+                onPhotoTaken = true,
+                classified = classified,
+                currentTime = currentTime,
+                bitmapImage = bitmapImage,
+            )
+        }
+    }
+
+    fun resetState() {
+        _dashboardUiState.update {
+            it.copy(
+                onPhotoTaken = false,
+                classified = "",
+                currentTime = "",
+                bitmapImage = null,
+            )
+        }
     }
 }
 
 data class DashboardUiState(
-    var onPhotoTaken: Boolean = false,
-    var classified: String = "",
-    var bitmapImage: Bitmap? = null
+    val onPhotoTaken: Boolean = false,
+    val currentTime: String = "",
+    val classified: String = "",
+    val bitmapImage: Bitmap? = null
 )

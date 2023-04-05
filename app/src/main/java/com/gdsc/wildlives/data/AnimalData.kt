@@ -5,9 +5,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AnimalData(
     val name: String = "",
+    val scientificName: String = "",
+    val description: String = "",
     val animalClass: String = "",
     val endangeredClass: String = "",
-    val imageUrl: String = ""
+    val length: String = "",
+    val weight: String = "",
+    val habitats: String = "",
+    val imageUrl: String = "",
+    val photoTakenTime: String? = "",
 )
 
 enum class AnimalClass {

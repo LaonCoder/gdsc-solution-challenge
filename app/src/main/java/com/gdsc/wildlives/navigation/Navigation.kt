@@ -9,12 +9,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.gdsc.wildlives.data.AnimalData
-import com.gdsc.wildlives.pages.CheckoutScreen
-import com.gdsc.wildlives.pages.PopularListScreen
+import com.gdsc.wildlives.pages.EncyclopediaScreen
 import com.gdsc.wildlives.pages.dashboard.Dashboard
 import com.gdsc.wildlives.pages.dashboard.DashboradViewModel
 import com.gdsc.wildlives.pages.detail.DetailViewModel
+import com.gdsc.wildlives.pages.detail.screen.ClassificationScreen
 import com.gdsc.wildlives.pages.detail.screen.DetailScreen
+import com.gdsc.wildlives.pages.donate.DonateViewModel
+import com.gdsc.wildlives.pages.encyclopedia.EncyclopediaViewModel
 import com.gdsc.wildlives.pages.login.LoginScreen
 import com.gdsc.wildlives.pages.login.LoginViewModel
 import com.gdsc.wildlives.pages.login.SignUpScreen
@@ -30,7 +32,9 @@ fun Navigation(
     searchViewModel: SearchViewModel,
     detailViewModel: DetailViewModel,
     dashboardViewModel: DashboradViewModel,
+    encyclopediaViewModel: EncyclopediaViewModel,
     profileViewModel: ProfileViewModel,
+    donateViewModel: DonateViewModel,
     cameraPermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>
 ) {
     val navController = rememberNavController()
@@ -65,6 +69,8 @@ fun Navigation(
                 dashboardViewModel = dashboardViewModel,
                 searchViewModel = searchViewModel,
                 profileViewModel = profileViewModel,
+                encyclopediaViewModel = encyclopediaViewModel,
+                donateViewModel = donateViewModel,
                 cameraPermissionResultLauncher = cameraPermissionResultLauncher
             )
         }
@@ -86,14 +92,21 @@ fun Navigation(
             )
         }
 
-
-        composable(Screen.PopularListScreen.route) {
-            PopularListScreen(navController = navController)
+        composable(
+            route = Screen.ClassificationScreen.route + "?animal={animal}",
+            arguments = listOf(navArgument("animal") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { backStackEntry ->
+            val animalDataJson = backStackEntry.arguments?.getString("animal")
+            Log.d("animalDataJson", animalDataJson ?: "")
+            val passedAnimalData = Json.decodeFromString<AnimalData>(animalDataJson ?: "")
+            ClassificationScreen(
+                animalData = passedAnimalData,
+                navController = navController,
+                detailViewModel = detailViewModel,
+            )
         }
-
-        composable(Screen.AddToCartScreen.route) {
-            CheckoutScreen()
-        }
-
     }
 }

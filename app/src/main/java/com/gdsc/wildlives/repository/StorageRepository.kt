@@ -1,10 +1,14 @@
 package com.gdsc.wildlives.repository
 
+import android.util.Log
 import androidx.compose.animation.core.snap
+import com.gdsc.wildlives.data.AnimalData
+import com.gdsc.wildlives.data.EndangeredClassList
 import com.gdsc.wildlives.data.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -45,6 +49,32 @@ class StorageRepository() {
         }
         awaitClose {
             snapshotStateListener?.remove()
+        }
+    }
+
+    fun saveAnimalDataToUserProfile(
+        animalData: AnimalData,
+    ) {
+        try {
+            // Save Animal Data
+            Firebase.firestore
+                .collection("USER")
+                .document(getUserId())
+                .update("animals", FieldValue.arrayUnion(animalData))
+
+            // Update User Point
+            Firebase.firestore
+                .collection("USER")
+                .document(getUserId())
+                .update("points",
+                    when (animalData.endangeredClass) {
+                        EndangeredClassList.ONE.name -> FieldValue.increment(1500)
+                        EndangeredClassList.TWO.name -> FieldValue.increment(700)
+                        else -> FieldValue.increment(300)
+                    }
+                )
+        } catch(e: Exception) {
+            Log.d("Error occurred while Saving Animal Data to User Profile", e.printStackTrace().toString())
         }
     }
 }

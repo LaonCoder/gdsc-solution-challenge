@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -53,6 +56,17 @@ fun SearchScreen(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
+                    .drawWithCache {
+                        val gradient = Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black),
+                            startY = size.height  * 4 / 5,
+                            endY = size.height
+                        )
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(gradient, blendMode = BlendMode.Multiply)
+                        }
+                    }
                     .zIndex(-1f)
             )
             Column(
@@ -65,9 +79,10 @@ fun SearchScreen(
                     modifier = Modifier.padding(start = 15.dp, bottom = 15.dp)
                 ) {
                     Text(
+                        modifier = Modifier.offset(y = 10.dp),
                         text = "Discover",
-                        fontSize = 52.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 60.sp,
+                        fontWeight = FontWeight.ExtraBold,
                         color = Color.White,
                     )
                     Text(
